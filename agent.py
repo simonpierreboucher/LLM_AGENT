@@ -1,29 +1,23 @@
 import os
 import requests
-import json  # Import du module json
+from dotenv import load_dotenv
 import numpy as np
 from collections import defaultdict
 import hashlib
 
-# Charger les configurations depuis config.json
-try:
-    with open('config.json', 'r', encoding='utf-8') as config_file:
-        config = json.load(config_file)
-except FileNotFoundError:
-    raise FileNotFoundError("Le fichier config.json est introuvable. Veuillez le créer avec les configurations nécessaires.")
-except json.JSONDecodeError:
-    raise ValueError("Le fichier config.json contient une erreur de syntaxe JSON.")
+# Charger les variables d'environnement depuis .env
+load_dotenv()
 
-api_key = config.get("OPENAI_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
 
 # Vérification de la clé API
 if not api_key:
-    raise ValueError("La clé API OpenAI n'est pas définie. Veuillez la définir dans le fichier config.json.")
+    raise ValueError("La clé API OpenAI n'est pas définie. Veuillez la définir dans le fichier .env.")
 
 # Configuration des fichiers pour chaque agent
 agent_files = {
-    "agent1": config.get("AGENT1_FILE_PATH", "agent1_data.txt"),
-    "agent2": config.get("AGENT2_FILE_PATH", "agent2_data.txt")
+    "agent1": os.getenv("AGENT1_FILE_PATH", "agent1_data.txt"),
+    "agent2": os.getenv("AGENT2_FILE_PATH", "agent2_data.txt")
 }
 
 # Initialisation des mémoires épisodiques et globales par agent et par utilisateur
